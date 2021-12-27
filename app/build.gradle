@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: "de.mannodermaus.android-junit5"
 apply plugin: 'io.gitlab.arturbosch.detekt'
 apply plugin: 'jacoco'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 31
@@ -14,8 +15,8 @@ android {
         applicationId "com.klamerek.fantasyrealms"
         minSdkVersion 31
         targetSdkVersion 31
-        versionCode 13
-        versionName "0.13"
+        versionCode 15
+        versionName "0.15"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArgument "runnerBuilder", "de.mannodermaus.junit5.AndroidJUnit5Builder"
@@ -81,6 +82,9 @@ android {
 }
 
 dependencies {
+    implementation platform('com.google.firebase:firebase-bom:29.0.1')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.7.0'
