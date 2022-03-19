@@ -13,6 +13,7 @@ import com.klamerek.fantasyrealms.util.LocaleManager.english
 import com.klamerek.fantasyrealms.util.LocaleManager.french
 import com.klamerek.fantasyrealms.util.LocaleManager.german
 import com.klamerek.fantasyrealms.util.LocaleManager.hungarian
+import com.klamerek.fantasyrealms.util.LocaleManager.polish
 import com.klamerek.fantasyrealms.util.LocaleManager.russian
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
@@ -21,7 +22,6 @@ import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
-@Disabled
 @MediumTest
 class CardTitleRecognizerTest {
 
@@ -185,6 +185,7 @@ class CardTitleRecognizerTest {
     @DisplayName("Card hungarian")
     @Test
     fun card_hungarian_jester() {
+
         LocaleManager.saveLanguageInPreferences( InstrumentationRegistry.getInstrumentation().targetContext, hungarian)
         val context = LocaleManager.updateContextWithPreferredLanguage(
             InstrumentationRegistry.getInstrumentation().targetContext, hungarian
@@ -197,6 +198,27 @@ class CardTitleRecognizerTest {
         assertThat(
             task.result, Matchers.containsInAnyOrder(
                 empress.id
+            )
+        )
+    }
+
+    @DisplayName("Card set polish")
+    @Test
+    fun card_set_polish() {
+
+        LocaleManager.saveLanguageInPreferences( InstrumentationRegistry.getInstrumentation().targetContext, polish)
+        val context = LocaleManager.updateContextWithPreferredLanguage(
+            InstrumentationRegistry.getInstrumentation().targetContext, polish
+        )
+        val bean = CardTitleRecognizer(context)
+        val task = bean.process(InputImage.fromBitmap(getBitmapFromTestAssets("cardSetPolish.jpg"), 0))
+
+        Tasks.await(task)
+
+        assertThat(
+            task.result, Matchers.containsInAnyOrder(
+                lightning.id, earthElemental.id, queen.id, collector.id,
+                rainstorm.id //false positive
             )
         )
     }
