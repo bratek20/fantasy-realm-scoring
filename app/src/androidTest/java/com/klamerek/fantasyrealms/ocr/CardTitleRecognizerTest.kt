@@ -8,6 +8,7 @@ import com.google.android.gms.tasks.Tasks
 import com.google.mlkit.vision.common.InputImage
 import com.klamerek.fantasyrealms.game.*
 import com.klamerek.fantasyrealms.getBitmapFromTestAssets
+import com.klamerek.fantasyrealms.util.Language
 import com.klamerek.fantasyrealms.util.LocaleManager
 import com.klamerek.fantasyrealms.util.LocaleManager.english
 import com.klamerek.fantasyrealms.util.LocaleManager.french
@@ -18,7 +19,6 @@ import com.klamerek.fantasyrealms.util.LocaleManager.russian
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 
@@ -61,6 +61,13 @@ class CardTitleRecognizerTest {
                 princess.id, bellTower.id, bookOfChanges.id, candle.id
             )
         )
+    }
+
+    @DisplayName("Hand example, each card separated (english) refactor")
+    @Test
+    fun hand_example_each_card_separated_refactor() {
+        check("cardsExample1.jpg", english,
+            listOf(beastmaster, forge, unicorn, princess, bellTower, bookOfChanges, candle))
     }
 
     @DisplayName("Hand example 2, each card separated (english)")
@@ -184,7 +191,7 @@ class CardTitleRecognizerTest {
 
     @DisplayName("Card hungarian")
     @Test
-    fun card_hungarian_jester() {
+    fun card_hungarian() {
 
         LocaleManager.saveLanguageInPreferences( InstrumentationRegistry.getInstrumentation().targetContext, hungarian)
         val context = LocaleManager.updateContextWithPreferredLanguage(
@@ -202,23 +209,44 @@ class CardTitleRecognizerTest {
         )
     }
 
-    @DisplayName("Card set polish")
+    @DisplayName("Original Card Example Polish")
     @Test
-    fun card_set_polish() {
+    fun original_card_example_polish() {
+        check("originalCardExamplePolish.jpg", polish, listOf(warDirigible))
+    }
 
-        LocaleManager.saveLanguageInPreferences( InstrumentationRegistry.getInstrumentation().targetContext, polish)
+    @DisplayName("Original Hand Example Polish")
+    @Test
+    fun original_hand_example_polish() {
+        check("originalHandExamplePolish.jpg", polish, listOf(bookOfChanges, elvenArchers, wildfire, forge, princess, fireElemental, king))
+    }
+
+    @DisplayName("Expansion Card Example Polish")
+    @Test
+    fun expansion_card_example_polish() {
+        check("expansionCardExamplePolish.jpg", polish, listOf(genie))
+    }
+
+    @DisplayName("Expansion Hand Example Polish")
+    @Test
+    fun expansion_hand_example_polish() {
+        check("expansionHandExamplePolish.jpg", polish, listOf(bookOfChanges, elvenArchers, wildfire, forge, princess, fireElemental, king))
+    }
+
+    private fun check(fileName: String, language: Language, cards: Collection<CardDefinition>) {
+        LocaleManager.saveLanguageInPreferences(InstrumentationRegistry.getInstrumentation().targetContext, language)
         val context = LocaleManager.updateContextWithPreferredLanguage(
-            InstrumentationRegistry.getInstrumentation().targetContext, polish
+            InstrumentationRegistry.getInstrumentation().targetContext, language
         )
         val bean = CardTitleRecognizer(context)
-        val task = bean.process(InputImage.fromBitmap(getBitmapFromTestAssets("cardSetPolish.jpg"), 0))
+        val task = bean.process(InputImage.fromBitmap(getBitmapFromTestAssets(fileName), 0))
 
         Tasks.await(task)
 
+        val cardIds = cards.stream().map { c -> c.id }.toArray()
         assertThat(
             task.result, Matchers.containsInAnyOrder(
-                lightning.id, earthElemental.id, queen.id, collector.id,
-                rainstorm.id //false positive
+                *cardIds
             )
         )
     }
