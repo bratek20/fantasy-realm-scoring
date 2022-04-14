@@ -46,26 +46,6 @@ class CardTitleRecognizerTest {
     @DisplayName("Hand example, each card separated (english)")
     @Test
     fun hand_example_each_card_separated() {
-        LocaleManager.saveLanguageInPreferences( InstrumentationRegistry.getInstrumentation().targetContext, LocaleManager.english)
-        val context = LocaleManager.updateContextWithPreferredLanguage(
-            InstrumentationRegistry.getInstrumentation().targetContext, english
-        )
-        val bean = CardTitleRecognizer(context)
-        val task = bean.process(InputImage.fromBitmap(getBitmapFromTestAssets("cardsExample1.jpg"), 0))
-
-        Tasks.await(task)
-
-        assertThat(
-            task.result, Matchers.containsInAnyOrder(
-                beastmaster.id, forge.id, unicorn.id,
-                princess.id, bellTower.id, bookOfChanges.id, candle.id
-            )
-        )
-    }
-
-    @DisplayName("Hand example, each card separated (english) refactor")
-    @Test
-    fun hand_example_each_card_separated_refactor() {
         check("cardsExample1.jpg", english,
             listOf(beastmaster, forge, unicorn, princess, bellTower, bookOfChanges, candle))
     }
@@ -73,140 +53,51 @@ class CardTitleRecognizerTest {
     @DisplayName("Hand example 2, each card separated (english)")
     @Test
     fun hand_example_2_each_card_separated() {
-        LocaleManager.saveLanguageInPreferences( InstrumentationRegistry.getInstrumentation().targetContext, LocaleManager.english)
-        val context = LocaleManager.updateContextWithPreferredLanguage(
-            InstrumentationRegistry.getInstrumentation().targetContext, english
-        )
-        val bean = CardTitleRecognizer(context)
-        val task = bean.process(InputImage.fromBitmap(getBitmapFromTestAssets("cardsExample2.jpg"), 0))
-
-        Tasks.await(task)
-
-        assertThat(
-            task.result, Matchers.containsInAnyOrder(
-                rainstorm.id, waterElemental.id, whirlwind.id,
-                basilisk.id, worldTree.id, airElemental.id, wildfire.id, swamp.id, bellTower.id, candle.id,
-                greatFlood.id, lightning.id //Great flood and lighting are false positives but hard to detect
-            )
-        )
+        check("cardsExample2.jpg", english,
+            listOf(rainstorm, waterElemental, whirlwind,
+                basilisk, worldTree, airElemental, wildfire, swamp, bellTower, candle,
+                greatFlood, lightning //Great flood and lighting are false positives but hard to detect
+        ))
     }
 
     @DisplayName("Hand example 3, each card separated (english)")
     @Test
     fun hand_example_3_each_card_separated() {
-        LocaleManager.saveLanguageInPreferences( InstrumentationRegistry.getInstrumentation().targetContext, LocaleManager.english)
-        val context = LocaleManager.updateContextWithPreferredLanguage(
-            InstrumentationRegistry.getInstrumentation().targetContext, english
-        )
-        val bean = CardTitleRecognizer(context)
-        val task = bean.process(InputImage.fromBitmap(getBitmapFromTestAssets("cardsExample3.jpg"), 0))
-
-        Tasks.await(task)
-
-        assertThat(
-            task.result, Matchers.containsInAnyOrder(
-                shieldOfKeth.id, swordOfKeth.id, empress.id,
-                celestialKnights.id, mirage.id, fireElemental.id, forge.id
-            )
-        )
+        check("cardsExample3.jpg", english,
+            listOf(shieldOfKeth, swordOfKeth, empress,
+                celestialKnights, mirage, fireElemental, forge))
     }
 
     @DisplayName("Title only (french)")
     @Test
     fun title_only_french() {
-        LocaleManager.saveLanguageInPreferences( InstrumentationRegistry.getInstrumentation().targetContext, LocaleManager.french)
-        val context = LocaleManager.updateContextWithPreferredLanguage(
-            InstrumentationRegistry.getInstrumentation().targetContext, french
-        )
-        val bean = CardTitleRecognizer(context)
-        val task = bean.process(InputImage.fromBitmap(getBitmapFromTestAssets("cardExampleFrench.png"), 0))
-
-        Tasks.await(task)
-
-        assertThat(
-            task.result, Matchers.containsInAnyOrder(
-                mirage.id, doppelganger.id, unicorn.id, worldTree.id,
-                king.id, swamp.id
-            )
-        )
+        check("cardExampleFrench.png", french,
+            listOf(mirage, doppelganger, unicorn, worldTree, king, swamp))
     }
 
     @DisplayName("One card (russian)")
     @Test
     fun one_card_russian() {
-        LocaleManager.saveLanguageInPreferences( InstrumentationRegistry.getInstrumentation().targetContext, LocaleManager.russian)
-        val context = LocaleManager.updateContextWithPreferredLanguage(
-            InstrumentationRegistry.getInstrumentation().targetContext, russian
-        )
-        val bean = CardTitleRecognizer(context)
-        val task = bean.process(InputImage.fromBitmap(getBitmapFromTestAssets("cardExampleRussian.jpg"), 0))
-
-        Tasks.await(task)
-
-        assertThat(
-            task.result, Matchers.containsInAnyOrder(
-                hydra.id
-            )
-        )
+        check("cardExampleRussian.jpg", russian, listOf(hydra))
     }
 
     @DisplayName("Card set russian")
     @Test
     fun card_set_russian() {
-        LocaleManager.saveLanguageInPreferences( InstrumentationRegistry.getInstrumentation().targetContext, LocaleManager.russian)
-        val context = LocaleManager.updateContextWithPreferredLanguage(
-            InstrumentationRegistry.getInstrumentation().targetContext, russian
-        )
-        val bean = CardTitleRecognizer(context)
-        val task = bean.process(InputImage.fromBitmap(getBitmapFromTestAssets("cardSetRussian.jpg"), 0))
-
-        Tasks.await(task)
-
-        assertThat(
-            task.result, Matchers.containsInAnyOrder(
-                bellTower.id, protectionRune.id, wildfire.id, king.id,
-                warlockLord.id, lightCavalry.id, worldTree.id, basilisk.id
-            )
-        )
+        check("cardSetRussian.jpg", russian,
+            listOf(bellTower, protectionRune, wildfire, king, warlockLord, lightCavalry, worldTree, basilisk))
     }
 
     @DisplayName("Card german jester")
     @Test
     fun card_german_jester() {
-        LocaleManager.saveLanguageInPreferences( InstrumentationRegistry.getInstrumentation().targetContext, LocaleManager.german)
-        val context = LocaleManager.updateContextWithPreferredLanguage(
-            InstrumentationRegistry.getInstrumentation().targetContext, german
-        )
-        val bean = CardTitleRecognizer(context)
-        val task = bean.process(InputImage.fromBitmap(getBitmapFromTestAssets("germanJester.jpg"), 0))
-
-        Tasks.await(task)
-
-        assertThat(
-            task.result, Matchers.containsInAnyOrder(
-                jester.id
-            )
-        )
+        check("germanJester.jpg", german, listOf(jester))
     }
 
     @DisplayName("Card hungarian")
     @Test
     fun card_hungarian() {
-
-        LocaleManager.saveLanguageInPreferences( InstrumentationRegistry.getInstrumentation().targetContext, hungarian)
-        val context = LocaleManager.updateContextWithPreferredLanguage(
-            InstrumentationRegistry.getInstrumentation().targetContext, hungarian
-        )
-        val bean = CardTitleRecognizer(context)
-        val task = bean.process(InputImage.fromBitmap(getBitmapFromTestAssets("cardHungarian.jpg"), 0))
-
-        Tasks.await(task)
-
-        assertThat(
-            task.result, Matchers.containsInAnyOrder(
-                empress.id
-            )
-        )
+        check("cardHungarian.jpg", hungarian, listOf(empress))
     }
 
     @DisplayName("Original Card Example Polish")
@@ -230,7 +121,7 @@ class CardTitleRecognizerTest {
     @DisplayName("Expansion Hand Example Polish")
     @Test
     fun expansion_hand_example_polish() {
-        check("expansionHandExamplePolish.jpg", polish, listOf(bookOfChanges, elvenArchers, wildfire, forge, princess, fireElemental, king))
+        check("expansionHandExamplePolish.jpg", polish, listOf(specter, dungeon, darkQueen, chapel, demon, bellTowerV2, leprechaun, dwarvishInfantry))
     }
 
     private fun check(fileName: String, language: Language, cards: Collection<CardDefinition>) {
